@@ -1,0 +1,783 @@
+{
+  "contractName": "Factory",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "salt",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deployed",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "code",
+          "type": "bytes"
+        },
+        {
+          "name": "salt",
+          "type": "uint256"
+        }
+      ],
+      "name": "deploy",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50610199806100206000396000f3fe6080604052600436106100405763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416639c4ae2d08114610045575b600080fd5b34801561005157600080fd5b506100fa6004803603604081101561006857600080fd5b81019060208101813564010000000081111561008357600080fd5b82018360208201111561009557600080fd5b803590602001918460018302840111640100000000831117156100b757600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955050913592506100fc915050565b005b6000818351602085016000f59050803b151561011757600080fd5b6040805173ffffffffffffffffffffffffffffffffffffffff831681526020810184905281517fb03c53b28e78a88e31607a27e1fa48234dce28d5d9d9ec7b295aeb02e674a1e1929181900390910190a150505056fea165627a7a72305820503f639f18482f569b98f1230d87c3c9dab27f9d2b35e5ab1e58750454d4278a0029",
+  "deployedBytecode": "0x6080604052600436106100405763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416639c4ae2d08114610045575b600080fd5b34801561005157600080fd5b506100fa6004803603604081101561006857600080fd5b81019060208101813564010000000081111561008357600080fd5b82018360208201111561009557600080fd5b803590602001918460018302840111640100000000831117156100b757600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955050913592506100fc915050565b005b6000818351602085016000f59050803b151561011757600080fd5b6040805173ffffffffffffffffffffffffffffffffffffffff831681526020810184905281517fb03c53b28e78a88e31607a27e1fa48234dce28d5d9d9ec7b295aeb02e674a1e1929181900390910190a150505056fea165627a7a72305820503f639f18482f569b98f1230d87c3c9dab27f9d2b35e5ab1e58750454d4278a0029",
+  "sourceMap": "33:329:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;33:329:1;;;;;;;",
+  "deployedSourceMap": "33:329:1:-;;;;;;;;;;;;;;;;;;;;;;;101:259;;8:9:-1;5:2;;;30:1;27;20:12;5:2;101:259:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;101:259:1;;;;;;;;21:11:-1;5:28;;2:2;;;46:1;43;36:12;2:2;101:259:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;101:259:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;101:259:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;81:16;;74:27;;;;-1:-1;101:259:1;;-1:-1:-1;;101:259:1;;;-1:-1:-1;101:259:1;;-1:-1:-1;;101:259:1;;;;163:12;247:4;240;234:11;227:4;221;217:15;214:1;206:46;198:54;;281:4;269:17;262:25;259:2;;;308:1;305;298:12;259:2;335:20;;;;;;;;;;;;;;;;;;;;;;;;;;;101:259;;;:::o",
+  "source": "pragma solidity >0.4.99 <0.6.0;\n\ncontract Factory {\n  event Deployed(address addr, uint256 salt);\n\n  function deploy(bytes memory code, uint256 salt) public {\n    address addr;\n    assembly {\n      addr := create2(0, add(code, 0x20), mload(code), salt)\n      if iszero(extcodesize(addr)) {\n        revert(0, 0)\n      }\n    }\n\n    emit Deployed(addr, salt);\n  }\n}\n",
+  "sourcePath": "/home/aery/blockchain/advanced_contracts/solidity-create2-example/contracts/Factory.sol",
+  "ast": {
+    "absolutePath": "/home/aery/blockchain/advanced_contracts/solidity-create2-example/contracts/Factory.sol",
+    "exportedSymbols": {
+      "Factory": [
+        78
+      ]
+    },
+    "id": 79,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 54,
+        "literals": [
+          "solidity",
+          ">",
+          "0.4",
+          ".99",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:31:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 78,
+        "linearizedBaseContracts": [
+          78
+        ],
+        "name": "Factory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 60,
+            "name": "Deployed",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 59,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 56,
+                  "indexed": false,
+                  "name": "addr",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 60,
+                  "src": "69:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 55,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "69:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58,
+                  "indexed": false,
+                  "name": "salt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 60,
+                  "src": "83:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 57,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "83:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "68:28:1"
+            },
+            "src": "54:43:1"
+          },
+          {
+            "body": {
+              "id": 76,
+              "nodeType": "Block",
+              "src": "157:203:1",
+              "statements": [
+                {
+                  "assignments": [
+                    68
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 68,
+                      "name": "addr",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 76,
+                      "src": "163:12:1",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      },
+                      "typeName": {
+                        "id": 67,
+                        "name": "address",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "163:7:1",
+                        "stateMutability": "nonpayable",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 69,
+                  "initialValue": null,
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "163:12:1"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "code": {
+                        "declaration": 62,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "221:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "code": {
+                        "declaration": 62,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "240:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "addr": {
+                        "declaration": 68,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "198:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "salt": {
+                        "declaration": 64,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "247:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "addr": {
+                        "declaration": 68,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "281:4:1",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 70,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    addr := create2(0, add(code, 0x20), mload(code), salt)\n    if iszero(extcodesize(addr))\n    {\n        revert(0, 0)\n    }\n}",
+                  "src": "181:153:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 72,
+                        "name": "addr",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 68,
+                        "src": "344:4:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 73,
+                        "name": "salt",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 64,
+                        "src": "350:4:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 71,
+                      "name": "Deployed",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 60,
+                      "src": "335:8:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_uint256_$returns$__$",
+                        "typeString": "function (address,uint256)"
+                      }
+                    },
+                    "id": 74,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "335:20:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 75,
+                  "nodeType": "EmitStatement",
+                  "src": "330:25:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 77,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "deploy",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 65,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 62,
+                  "name": "code",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 77,
+                  "src": "117:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 61,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "117:5:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 64,
+                  "name": "salt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 77,
+                  "src": "136:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "136:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "116:33:1"
+            },
+            "returnParameters": {
+              "id": 66,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "157:0:1"
+            },
+            "scope": 78,
+            "src": "101:259:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 79,
+        "src": "33:329:1"
+      }
+    ],
+    "src": "0:363:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/aery/blockchain/advanced_contracts/solidity-create2-example/contracts/Factory.sol",
+    "exportedSymbols": {
+      "Factory": [
+        78
+      ]
+    },
+    "id": 79,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 54,
+        "literals": [
+          "solidity",
+          ">",
+          "0.4",
+          ".99",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:31:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 78,
+        "linearizedBaseContracts": [
+          78
+        ],
+        "name": "Factory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 60,
+            "name": "Deployed",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 59,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 56,
+                  "indexed": false,
+                  "name": "addr",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 60,
+                  "src": "69:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 55,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "69:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 58,
+                  "indexed": false,
+                  "name": "salt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 60,
+                  "src": "83:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 57,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "83:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "68:28:1"
+            },
+            "src": "54:43:1"
+          },
+          {
+            "body": {
+              "id": 76,
+              "nodeType": "Block",
+              "src": "157:203:1",
+              "statements": [
+                {
+                  "assignments": [
+                    68
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 68,
+                      "name": "addr",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 76,
+                      "src": "163:12:1",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      },
+                      "typeName": {
+                        "id": 67,
+                        "name": "address",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "163:7:1",
+                        "stateMutability": "nonpayable",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 69,
+                  "initialValue": null,
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "163:12:1"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "code": {
+                        "declaration": 62,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "221:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "code": {
+                        "declaration": 62,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "240:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "addr": {
+                        "declaration": 68,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "198:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "salt": {
+                        "declaration": 64,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "247:4:1",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "addr": {
+                        "declaration": 68,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "281:4:1",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 70,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    addr := create2(0, add(code, 0x20), mload(code), salt)\n    if iszero(extcodesize(addr))\n    {\n        revert(0, 0)\n    }\n}",
+                  "src": "181:153:1"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 72,
+                        "name": "addr",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 68,
+                        "src": "344:4:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 73,
+                        "name": "salt",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 64,
+                        "src": "350:4:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 71,
+                      "name": "Deployed",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 60,
+                      "src": "335:8:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_uint256_$returns$__$",
+                        "typeString": "function (address,uint256)"
+                      }
+                    },
+                    "id": 74,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "335:20:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 75,
+                  "nodeType": "EmitStatement",
+                  "src": "330:25:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 77,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "deploy",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 65,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 62,
+                  "name": "code",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 77,
+                  "src": "117:17:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 61,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "117:5:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 64,
+                  "name": "salt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 77,
+                  "src": "136:12:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "136:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "116:33:1"
+            },
+            "returnParameters": {
+              "id": 66,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "157:0:1"
+            },
+            "scope": 78,
+            "src": "101:259:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 79,
+        "src": "33:329:1"
+      }
+    ],
+    "src": "0:363:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.0-nightly.2018.11.5+commit.88aee34c.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.1",
+  "updatedAt": "2019-03-27T17:26:45.763Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -20,7 +20,7 @@ async function deployFactory() {
   const {_address: factoryAddress} = await Factory.deploy({
       data: factoryBytecode
   }).send({
-    from: '0x303de46de694cc75a2f66da93ac86c6a6eee607e'
+    from: web3.eth.currentProvider.addresses[0]
   })
 
   return factoryAddress
@@ -28,7 +28,7 @@ async function deployFactory() {
 
 async function deployAccount (factoryAddress, salt, recipient) {
   const factory = new web3.eth.Contract(factoryAbi, factoryAddress)
-  const account = '0x303de46de694cc75a2f66da93ac86c6a6eee607e'
+  const account = web3.eth.currentProvider.addresses[0]
   const nonce = await web3.eth.getTransactionCount(account)
   const bytecode = `${accountBytecode}${encodeParam('address', recipient).slice(2)}`
   const result = await factory.methods.deploy(bytecode, salt).send({
