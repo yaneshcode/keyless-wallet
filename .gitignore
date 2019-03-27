@@ -71,3 +71,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# credentials
+test/utils/credentials.js
