@@ -1,7 +1,7 @@
 const assert = require('assert')
 const Web3 = require('web3')
 const HDWalletProvider = require('truffle-hdwallet-provider')
-const credentials = require('./credentials.js')
+const credentials = require('../../credentials/credentials.js')
 
 // TODO: clean up
 

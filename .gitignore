@@ -73,4 +73,5 @@ typings/
 .serverless
 
 # credentials
-test/utils/credentials.js
+credentials/
+credentials/credentials.js
