@@ -1,0 +1,14 @@
+{
+  "name": "create2-proxy-migration",
+  "version": "1.0.0",
+  "description": "using create2 op code and a proxy upgrade strategy",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yaneshcode",
+  "license": "MIT"
+}
