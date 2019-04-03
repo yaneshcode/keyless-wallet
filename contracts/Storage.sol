@@ -1,8 +1,9 @@
 pragma solidity ^0.5.0;
 
-contract BytecodeStorage {
+contract Storage {
   Factory factory;
   uint8 currentVersion = 0;
+  uint256 public num;
 
   struct User {
     uint256 bytecodeVersion;
@@ -15,7 +16,7 @@ contract BytecodeStorage {
   }
 
   mapping(bytes32 => User) users;
-  mapping(uint256 => bytes) bytecodeMap;
+  mapping(uint256 => bytes) public bytecodeMap;
 
   constructor(address _address, bytes memory _bytecode) public {
     factory = Factory(_address);
@@ -28,8 +29,12 @@ contract BytecodeStorage {
     bytecodeMap[currentVersion] = _bytecode;
   }
 
-  function deployAccount(uint256 salt) public {
-    factory.deploy(bytecodeMap[currentVersion], salt);
+  function deployAccount(uint256 salt) public returns(address){
+    return factory.deploy(bytecodeMap[currentVersion], salt);
+  }
+
+  function getNumber(uint256 salt) public {
+      num = factory.returnSalt(salt);
   }
 
   function addUser(string memory _username, address _address) public {
@@ -68,7 +73,8 @@ contract BytecodeStorage {
     user.upgrading = true;
   }
 
-  function viewUser(string memory _username) public view returns(uint256, address, bool, bool, address, uint256, bool) {
+  function viewUser(string memory _username) public view returns
+  (uint256, address, bool, bool, address, uint256, bool) {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -76,6 +82,13 @@ contract BytecodeStorage {
 
     User storage user = users[usernameKey];
 
-    return(user.bytecodeVersion, user.walletAddress, user.deployed, user.exists, user.upgradeAddress, user.upgradeVersion, user.upgrading);
+    return(user.bytecodeVersion,
+        user.walletAddress,
+        user.deployed,
+        user.exists,
+        user.upgradeAddress,
+        user.upgradeVersion,
+        user.upgrading
+    );
   }
 }

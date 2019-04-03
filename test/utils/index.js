@@ -32,27 +32,27 @@ async function deployAccount (factoryAddress, salt, recipient) {
   const nonce = await web3.eth.getTransactionCount(account)
   const bytecode = `${accountBytecode}${encodeParam('address', recipient).slice(2)}`
   console.log(bytecode);
-  const result = await factory.methods.deploy(bytecode, salt).send({
-    from: account,
-    gas: 4500000,
-    gasPrice: 10000000000,
-    nonce
-  })
+  // const result = await factory.methods.deploy(bytecode, salt).send({
+  //   from: account,
+  //   gas: 4500000,
+  //   gasPrice: 10000000000,
+  //   nonce
+  // })
 
-  const computedAddr = buildCreate2Address(
-    factoryAddress,
-    numberToUint256(salt),
-    bytecode
-  )
-
-  const addr = result.events.Deployed.returnValues.addr.toLowerCase()
-  assert.equal(addr, computedAddr)
-
-  return {
-    txHash: result.transactionHash,
-    address: addr,
-    receipt: result
-  }
+  // const computedAddr = buildCreate2Address(
+  //   factoryAddress,
+  //   numberToUint256(salt),
+  //   bytecode
+  // )
+  //
+  // const addr = result.events.Deployed.returnValues.addr.toLowerCase()
+  // assert.equal(addr, computedAddr)
+  //
+  // return {
+  //   txHash: result.transactionHash,
+  //   address: addr,
+  //   receipt: result
+  // }
 }
 
 function buildCreate2Address(creatorAddress, saltHex, byteCode) {
