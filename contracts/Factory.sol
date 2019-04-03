@@ -1,4 +1,4 @@
-pragma solidity 0.5.6;
+pragma solidity 0.5.0;
 
 // Factory contract adapted from
 // https://github.com/stanislaw-glogowski/create2/blob/master/contracts/Factory.sol

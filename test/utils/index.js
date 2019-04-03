@@ -13,9 +13,11 @@ const provider = new HDWalletProvider(
 const web3 = new Web3(provider)
 
 const { abi:factoryAbi, bytecode:factoryBytecode } = require('../../build/contracts/Factory.json')
-const { abi:accountAbi, bytecode:accountBytecode } = require('../../build/contracts/Account.json')
+const { abi:accountAbi, bytecode:accountBytecode } = require('../../build/contracts/Wallet.json')
 
 async function deployFactory() {
+  console.log("deploy factory");
+  console.log(factoryBytecode);
   const Factory = new web3.eth.Contract(factoryAbi)
   const {_address: factoryAddress} = await Factory.deploy({
       data: factoryBytecode
@@ -38,7 +40,7 @@ async function deployAccount (factoryAddress, salt, recipient) {
   //   gasPrice: 10000000000,
   //   nonce
   // })
-
+  //
   // const computedAddr = buildCreate2Address(
   //   factoryAddress,
   //   numberToUint256(salt),

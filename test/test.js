@@ -10,9 +10,10 @@ const {
   isContract
 } = require('./utils')
 
-const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts/Account.json')
+const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts/Wallet.json')
 
 async function main() {
+  console.log("asfd");
   const factoryAddress = await deployFactory()
   const salt = 1
 
