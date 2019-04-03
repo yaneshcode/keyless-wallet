@@ -2,7 +2,9 @@ pragma solidity 0.5.6;
 
 contract Wallet {
 
-  event Transfer(address indexed from, address indexed to, uint tokens);
+  event Transfer(address indexed from, address indexed to, uint amount);
+  event Withdraw(address indexed from, address indexed to, uint amount);
+  event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   address payable public owner;
 
@@ -23,6 +25,7 @@ contract Wallet {
   // and they have control of their wallet
   function setOwner(address payable _owner) public {
     require(msg.sender == owner);
+    emit OwnershipChanged(owner, _owner);
     owner = _owner;
   }
 
@@ -36,7 +39,10 @@ contract Wallet {
 
   // Withdraw all funds to owner
   function withdraw() public onlyOwner {
+    uint256 balance = address(this).balance;
+    require(balance > 0);
     owner.transfer(address(this).balance);
+    emit Withdraw(address(this), owner, balance);
   }
 
   // View total balance

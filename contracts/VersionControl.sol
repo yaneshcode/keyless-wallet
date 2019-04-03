@@ -1,14 +1,25 @@
 pragma solidity 0.5.6;
 
+import "./SafeMath.sol";
+
+// Factory interface
+contract Factory {
+  function deploy(bytes memory code, uint256 salt) public returns(address);
+}
+
 // Datastore contract
 contract VersionControl {
 
-  event DeployedWallet(string username, address contractAddress);
+  using SafeMath for uint256;
+
+  event DeployedWallet(string username, address contractAddress, uint256 version);
   event UpgradedWallet(string username, address oldContractAddress, uint256 oldVersion, address newContractAddress, uint256 newVersion);
   event NewUser(string username, address contractAddress, uint256 version);
+  event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   Factory factory;            // Factory contract address
   uint256 currentVersion = 0; // Keep track of the current version
+  address owner;
 
   // struct to hold user data
   struct User {
@@ -28,6 +39,7 @@ contract VersionControl {
   mapping(uint256 => bytes) public bytecodeMap;
 
   constructor(address _address, bytes memory _bytecode) public {
+    owner = msg.sender;
     factory = Factory(_address);
     currentVersion = 0;
     bytecodeMap[currentVersion] = _bytecode;
@@ -39,9 +51,16 @@ contract VersionControl {
     _;
   }
 
+  // Transfering ownership
+  function setOwner(address _owner) public {
+    require(msg.sender == owner);
+    emit OwnershipChanged(owner, _owner);
+    owner = _owner;
+  }
+
   // owner can upgrade wallet contract
   function updateBytecode(bytes memory _bytecode) public onlyOwner {
-    currentVersion = currentVersion + 1;
+    currentVersion = currentVersion.add(1);
     bytecodeMap[currentVersion] = _bytecode;
   }
 
@@ -59,7 +78,10 @@ contract VersionControl {
     // Check wallet address for security
     require(walletAddress == user.walletAddress, "Wallet address does not match.");
 
+    emit DeployedWallet(_username, walletAddress, user.bytecodeVersion);
+
     user.deployed = true;
+
   }
 
   // deploying an upgraded wallet contract. user will supply salt
@@ -78,9 +100,12 @@ contract VersionControl {
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
 
+    emit upgradeWallet(_username, user.walletAddress, user.bytecodeVersion, user.upgradeAddress, user.upgradeVersion);
+
     user.bytecodeVersion = user.upgradeVersion;
     user.walletAddress = walletAddress;
     user.upgrading = false;
+
   }
 
   // adding a user to our database/mapping
@@ -103,6 +128,7 @@ contract VersionControl {
 
     users[usernameKey] = newUser;
 
+    emit newUser(_username, _address, currentVersion);
   }
 
   // puts the user in upgrade mode if there is a new wallet version
