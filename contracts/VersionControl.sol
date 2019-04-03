@@ -2,10 +2,12 @@ pragma solidity 0.5.6;
 
 // Datastore contract
 contract VersionControl {
-  Factory factory;
-  uint8 currentVersion = 0;
+
+  Factory factory;            // Factory contract address
+  uint256 currentVersion = 0; // Keep track of the current version
   uint256 public num;
 
+  // struct to hold user data
   struct User {
     uint256 bytecodeVersion;
     address walletAddress;
@@ -16,7 +18,10 @@ contract VersionControl {
     bool upgrading;
   }
 
+  // mapping of usernames
   mapping(bytes32 => User) users;
+
+  // mapping of bytecodes to keep track of versions
   mapping(uint256 => bytes) public bytecodeMap;
 
   constructor(address _address, bytes memory _bytecode) public {
@@ -25,12 +30,20 @@ contract VersionControl {
     bytecodeMap[currentVersion] = _bytecode;
   }
 
-  function updateBytecode(bytes memory _bytecode) public {
+  // owner modifier
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  // owner can upgrade wallet contract
+  function updateBytecode(bytes memory _bytecode) public onlyOwner {
     currentVersion = currentVersion + 1;
     bytecodeMap[currentVersion] = _bytecode;
   }
 
-  function deployAccount(uint256 salt) public returns(address){
+  // deploying a wallet contract. user will supply salt
+  function deployWallet(uint256 salt) public onlyOwner returns(address) {
     return factory.deploy(bytecodeMap[currentVersion], salt);
   }
 
@@ -38,7 +51,8 @@ contract VersionControl {
       num = factory.returnSalt(salt);
   }
 
-  function addUser(string memory _username, address _address) public {
+  // adding a user to our database/mapping
+  function addUser(string memory _username, address _address) public onlyOwner {
 
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
@@ -59,7 +73,10 @@ contract VersionControl {
 
   }
 
-  function upgradeUser(string memory _username, address _address) public {
+  // puts the user in upgrade mode if there is a new wallet version
+  // and user wants to upgrade.
+  // during upgrade stage we keep track of previous wallet and new wallet
+  function upgradeUser(string memory _username, address _address) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -74,6 +91,7 @@ contract VersionControl {
     user.upgrading = true;
   }
 
+  // public function to view a user's data
   function viewUser(string memory _username) public view returns
   (uint256, address, bool, bool, address, uint256, bool) {
     bytes memory usernameBytes = bytes(_username);
