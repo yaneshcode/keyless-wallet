@@ -31,6 +31,7 @@ async function deployAccount (factoryAddress, salt, recipient) {
   const account = web3.eth.currentProvider.addresses[0]
   const nonce = await web3.eth.getTransactionCount(account)
   const bytecode = `${accountBytecode}${encodeParam('address', recipient).slice(2)}`
+  console.log(bytecode);
   const result = await factory.methods.deploy(bytecode, salt).send({
     from: account,
     gas: 4500000,

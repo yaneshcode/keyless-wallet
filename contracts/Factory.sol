@@ -3,7 +3,7 @@ pragma solidity >0.4.99 <0.6.0;
 contract Factory {
   event Deployed(address addr, uint256 salt);
 
-  function deploy(bytes memory code, uint256 salt) public {
+  function deploy(bytes memory code, uint256 salt) public returns(address){
     address addr;
     assembly {
       addr := create2(0, add(code, 0x20), mload(code), salt)
@@ -13,5 +13,7 @@ contract Factory {
     }
 
     emit Deployed(addr, salt);
+
+    return addr;
   }
 }

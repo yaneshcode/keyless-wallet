@@ -29,6 +29,7 @@ async function main() {
 
   console.log("computed address: " + computedAddr)
   console.log("isContract: " + await isContract(computedAddr))
+  console.log("recipent: " + web3.eth.currentProvider.addresses[0])
 
   const result = await deployAccount(factoryAddress, salt, web3.eth.currentProvider.addresses[0])
 
