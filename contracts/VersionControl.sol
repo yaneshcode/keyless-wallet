@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-contract Storage {
+contract VersionControl {
   Factory factory;
   uint8 currentVersion = 0;
   uint256 public num;
