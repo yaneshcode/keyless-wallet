@@ -100,7 +100,7 @@ contract VersionControl {
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
 
-    emit upgradeWallet(_username, user.walletAddress, user.bytecodeVersion, user.upgradeAddress, user.upgradeVersion);
+    emit UpgradedWallet(_username, user.walletAddress, user.bytecodeVersion, user.upgradeAddress, user.upgradeVersion);
 
     user.bytecodeVersion = user.upgradeVersion;
     user.walletAddress = walletAddress;
@@ -128,7 +128,7 @@ contract VersionControl {
 
     users[usernameKey] = newUser;
 
-    emit newUser(_username, _address, currentVersion);
+    emit NewUser(_username, _address, currentVersion);
   }
 
   // puts the user in upgrade mode if there is a new wallet version

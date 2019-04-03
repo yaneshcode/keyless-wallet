@@ -27,12 +27,13 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.5.0-nightly.2018.11.5+commit.88aee34c',
+      version: '0.5.6',
       settings: {
         optimizer: {
           enabled: true,
           runs: 200
         },
+        evmVersion: "constantinople",
       },
     },
   },
