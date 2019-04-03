@@ -19,6 +19,7 @@ contract Factory {
       }
     }
 
+    // TODO: remove salt logging for security?
     emit Deployed(addr, salt);
 
     return addr;

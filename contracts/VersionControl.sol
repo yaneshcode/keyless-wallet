@@ -1,5 +1,6 @@
 pragma solidity 0.5.6;
 
+// Datastore contract
 contract VersionControl {
   Factory factory;
   uint8 currentVersion = 0;
