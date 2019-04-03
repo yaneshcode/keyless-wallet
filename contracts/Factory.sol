@@ -1,14 +1,9 @@
 pragma solidity 0.5.6;
 
+// Factory contract adapted from
+// https://github.com/stanislaw-glogowski/create2/blob/master/contracts/Factory.sol
 contract Factory {
   event Deployed(address addr, uint256 salt);
-
-  uint256 public num;
-
-  function returnSalt(uint256 salt) public returns(uint256) {
-      num = salt;
-      return salt;
-  }
 
   function deploy(bytes memory code, uint256 salt) public returns(address){
     address addr;
