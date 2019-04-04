@@ -16,8 +16,6 @@ const { abi:factoryAbi, bytecode:factoryBytecode } = require('../../build/contra
 const { abi:accountAbi, bytecode:accountBytecode } = require('../../build/contracts/Wallet.json')
 
 async function deployFactory() {
-  console.log("deploy factory");
-  console.log(factoryBytecode);
   const Factory = new web3.eth.Contract(factoryAbi)
   const {_address: factoryAddress} = await Factory.deploy({
       data: factoryBytecode
