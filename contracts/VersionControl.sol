@@ -1,10 +1,10 @@
-pragma solidity 0.5.0;
+pragma solidity >0.4.99 <0.6.0;
 
 import "./SafeMath.sol";
 
 // Factory interface
-contract Factory {
-  function deploy(bytes memory code, uint256 salt) public returns(address);
+interface Factory {
+  function deploy(bytes calldata code, uint256 salt) external returns(address);
 }
 
 // Datastore contract
