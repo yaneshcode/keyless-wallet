@@ -18,7 +18,7 @@ const {
 const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts/Wallet.json');
 
 
-contract('Factory', (accounts) => {
+contract('Upgradeable CREATE2 Wallet testing', (accounts) => {
 
   const bytecode = `${accountBytecode}${encodeParam('address', accounts[0]).slice(2)}`
 
@@ -27,13 +27,21 @@ contract('Factory', (accounts) => {
     this.versionContract = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
   })
 
-  describe('test deploy', () => {
-    it('should deploy', async () => {
-      // TODO
+  describe('Test deploy', () => {
+    it('Factory contract should deploy.', async () => {
 
-      console.log(this.factoryContract.address);
-      console.log(this.versionContract.address);
-      assert.ok(true)
+      let factoryContractDeployTest = await Factory.new({ from: accounts[0] })
+      // console.log(this.factoryContract.address);
+      // console.log(this.versionContract.address);
+      assert.ok(factoryContractDeployTest);
+    })
+
+    it('Version control contract should deploy.', async () => {
+
+      let versionContractDeployTest = await VersionControl.new(this.factoryContract.address, bytecode, { from: accounts[0] })
+      // console.log(this.factoryContract.address);
+      // console.log(this.versionContract.address);
+      assert.ok(versionContractDeployTest);
     })
   })
 
@@ -92,6 +100,17 @@ contract('Factory', (accounts) => {
       await shouldFail.reverting(versionContractOwnershipTest.setOwner(accounts[1], { from: accounts[2] }));
     });
 
+    it("Should fire event when transfering ownership", async () => {
+      let versionContractOwnershipTest = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
+
+      // SAVE LOGS
+      let { logs } = await versionContractOwnershipTest.setOwner(accounts[1], { from: accounts[0] });
+
+      // EVENT
+      await expectEvent.inLogs(logs, 'OwnershipChanged', { oldOwner: accounts[0], newOwner: accounts[1] });
+
+    });
+
     it("Should have owner address be same address who deployed contract.", async () => {
       const owner = accounts[0];
 
@@ -104,10 +123,31 @@ contract('Factory', (accounts) => {
 
     it("Should upgrade to next version", async () => {
       await this.versionContract.updateBytecode(bytecode);
-      let version = await this.versionContract.currentVersion();
-      console.log(version.toString());
+
+      assert.equal(
+        await this.versionContract.currentVersion(),
+        1,
+        "Updated version is not expected value."
+      );
     });
 
+    it("Should match with correct bytecode after upgrade", async () => {
+      await this.versionContract.updateBytecode(bytecode);
+
+      assert.equal(
+        await this.versionContract.currentVersion(),
+        2,
+        "Updated version is not expected value."
+      );
+
+      let version = await this.versionContract.currentVersion();
+
+      assert.equal(
+        await this.versionContract.bytecodeMap(version),
+        bytecode,
+        "Updated version bytecode is not expected value."
+      );
+    });
 
   })
 
