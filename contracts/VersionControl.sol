@@ -3,8 +3,8 @@ pragma solidity 0.5.7;
 import "./SafeMath.sol";
 
 // Factory interface
-interface Factory {
-  function deploy(bytes calldata code, uint256 salt) external returns(address);
+contract FactoryInterface {
+  function deploy(bytes memory code, uint256 salt) public returns(address);
 }
 
 // Datastore contract
@@ -17,9 +17,9 @@ contract VersionControl {
   event NewUser(string username, address contractAddress, uint256 version);
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
-  Factory factory;            // Factory contract address
-  uint256 currentVersion = 0; // Keep track of the current version
-  address owner;
+  FactoryInterface public factory;       // Factory contract address
+  uint256 public currentVersion = 0;     // Keep track of the current version
+  address public owner;
 
   // struct to hold user data
   struct User {
@@ -33,14 +33,14 @@ contract VersionControl {
   }
 
   // mapping of usernames
-  mapping(bytes32 => User) users;
+  mapping(bytes32 => User) public users;
 
   // mapping of bytecodes to keep track of versions
   mapping(uint256 => bytes) public bytecodeMap;
 
   constructor(address _address, bytes memory _bytecode) public {
     owner = msg.sender;
-    factory = Factory(_address);
+    factory = FactoryInterface(_address);
     currentVersion = 0;
     bytecodeMap[currentVersion] = _bytecode;
   }
