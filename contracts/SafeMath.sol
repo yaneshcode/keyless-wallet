@@ -2,7 +2,7 @@
 // ----------------------
 // https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-solidity/master/contracts/math/SafeMath.sol
 
-pragma solidity >0.4.99 <0.6.0;
+pragma solidity 0.5.7;
 
 /**
  * @title SafeMath

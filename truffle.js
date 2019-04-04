@@ -16,6 +16,9 @@ const HDWalletProvider = require('truffle-hdwallet-provider')
 //const credentials = require('./credentials/credentials.js')
 
 module.exports = {
+
+  plugins: ["truffle-security"],
+
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
   networks: {
@@ -27,7 +30,7 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.5.0-nightly.2018.11.5+commit.88aee34c',
+      version: '0.5.7',
       settings: {
         optimizer: {
           enabled: true,
@@ -37,4 +40,5 @@ module.exports = {
       },
     },
   },
+  plugins: [ "truffle-security" ]
 };
