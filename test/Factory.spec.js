@@ -1,18 +1,30 @@
 const ethers = require('ethers');
+const { expectEvent, shouldFail } = require('openzeppelin-test-helpers');
 
 const Factory = artifacts.require('Factory')
 const VersionControl = artifacts.require('VersionControl');
 
+const {
+  web3,
+  deployFactory,
+  deployAccount,
+  buildCreate2Address,
+  numberToUint256,
+  encodeParam,
+  isContract
+} = require('./utils')
 
-let bytecode = "0x608060405234801561001057600080fd5b506040516020806103b08339810180604052602081101561003057600080fd5b505160008054600160a060020a03909216600160a060020a031990921691909117905561034e806100626000396000f3fe6080604052600436106100505760003560e01c63ffffffff16806313af4035146100525780633ccfd60b146100855780638da5cb5b1461009a578063a9059cbb146100cb578063ad7a672f14610118575b005b34801561005e57600080fd5b506100506004803603602081101561007557600080fd5b5035600160a060020a031661013f565b34801561009157600080fd5b506100506101be565b3480156100a657600080fd5b506100af610268565b60408051600160a060020a039092168252519081900360200190f35b3480156100d757600080fd5b50610104600480360360408110156100ee57600080fd5b50600160a060020a038135169060200135610277565b604080519115158252519081900360200190f35b34801561012457600080fd5b5061012d61031d565b60408051918252519081900360200190f35b600054600160a060020a0316331461015657600080fd5b60008054604051600160a060020a03808516939216917f0384899bd253d83b23daa4d29aaa2efe0563d1132b43101e9ad667235aeb951b91a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0392909216919091179055565b600054600160a060020a031633146101d557600080fd5b3031600081116101e457600080fd5b60008054604051600160a060020a0390911691303180156108fc02929091818181858888f1935050505015801561021f573d6000803e3d6000fd5b50600054604080518381529051600160a060020a039092169130917f9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb919081900360200190a350565b600054600160a060020a031681565b60008054600160a060020a0316331461028f57600080fd5b303182111561029d57600080fd5b604051600160a060020a0384169083156108fc029084906000818181858888f193505050501580156102d3573d6000803e3d6000fd5b50604080518381529051600160a060020a0385169130917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9181900360200190a350600192915050565b30319056fea165627a7a7230582036bff7864d2885a0f2e51e1ed01bb61b95bc6c6ecad2ebd7da5431174fe10f0a00290000000000000000000000009a47603275a4b4c9005fbdf56ecb8d463bad7e8c";
-
+// We need the wallet bytecode for testing
+const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts/Wallet.json');
 
 
 contract('Factory', (accounts) => {
 
+  const bytecode = `${accountBytecode}${encodeParam('address', accounts[0]).slice(2)}`
+
   before('setup', async () => {
     this.factoryContract = await Factory.new({ from: accounts[0] });
-    this.VersionControlContract = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
+    this.versionContract = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
   })
 
   describe('test deploy', () => {
@@ -20,34 +32,88 @@ contract('Factory', (accounts) => {
       // TODO
 
       console.log(this.factoryContract.address);
-      console.log(this.VersionControlContract.address);
+      console.log(this.versionContract.address);
       assert.ok(true)
     })
   })
 
 
   describe('Version Control testing', () => {
-    it('should deploy', async () => {
-      // TODO
 
-      console.log(this.factoryContract.address);
-      console.log(this.VersionControlContract.address);
-      assert.ok(true)
-    })
+    it("Should have owner address be same address who deployed contract.", async () => {
+      const owner = accounts[0];
+
+      assert.equal(
+        (await this.versionContract.owner()),
+        owner,
+        "Initial owner is not expected address."
+      );
+    });
+
+    it("Should have correct factory contract address.", async () => {
+
+      assert.equal(
+        (await this.versionContract.factory()),
+        this.factoryContract.address,
+        "Factory contract address is not expected address."
+      );
+    });
+
+    it("Should have correct initial bytecode.", async () => {
+
+      assert.equal(
+        (await this.versionContract.bytecodeMap(0)),
+        bytecode,
+        "Initial bytecode does not match."
+      );
+    });
+
+
+    it("Should let owner transfer ownership.", async () => {
+      let versionContractOwnershipTest = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
+      await versionContractOwnershipTest.setOwner(accounts[1], { from: accounts[0] })
+
+      assert.equal(
+        await versionContractOwnershipTest.owner(),
+        accounts[1],
+        "Owner transfer does not match."
+      )
+    });
+
+    it("Should fail if non-owner tries to transfer ownership.", async () => {
+      let versionContractOwnershipTest = await VersionControl.new(this.factoryContract.address, bytecode, {from: accounts[0]});
+
+      assert.equal(
+        await versionContractOwnershipTest.owner(),
+        accounts[0],
+        "Original owner should not have changed."
+      );
+
+      await shouldFail.reverting(versionContractOwnershipTest.setOwner(accounts[1], { from: accounts[2] }));
+    });
+
+    it("Should have owner address be same address who deployed contract.", async () => {
+      const owner = accounts[0];
+
+      assert.equal(
+        (await this.versionContract.owner()),
+        owner,
+        "Initial owner is not expected address."
+      );
+    });
 
     it("Should upgrade to next version", async () => {
-      await this.VersionControlContract.updateBytecode(bytecode);
-      let version = await this.VersionControlContract.currentVersion();
+      await this.versionContract.updateBytecode(bytecode);
+      let version = await this.versionContract.currentVersion();
       console.log(version.toString());
-    })
+    });
+
+
   })
 
   describe('Factory testing', () => {
     it('Should deploy', async () => {
       // TODO
-
-      console.log(this.factoryContract.address);
-      console.log(this.VersionControlContract.address);
       assert.ok(true)
     })
   })
@@ -55,9 +121,6 @@ contract('Factory', (accounts) => {
   describe('Wallet testing', () => {
     it('should deploy', async () => {
       // TODO
-
-      console.log(this.factoryContract.address);
-      console.log(this.VersionControlContract.address);
       assert.ok(true)
     })
   })

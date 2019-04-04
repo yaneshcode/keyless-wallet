@@ -3,3 +3,9 @@ fac bytecode:
 
 static analysis:
 https://tool.smartdec.net/scan/86cc7f0813e542aa9f6757f665d48bfd
+
+Factory address(kovan):
+0xf625f80eacbe35019bc881a5e1359f58bc74339a
+
+Version Control (kovan):
+0x4ea4a965aad12729836380fa8c4573216a253c75
