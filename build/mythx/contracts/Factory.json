@@ -3,7 +3,7 @@
         "name": "solc",
         "version": "0.5.7+commit.6da8b019.Emscripten.clang"
     },
-    "updatedAt": "2019-04-04T17:39:28.065Z",
+    "updatedAt": "2019-04-04T22:47:06.837Z",
     "sources": {
         "/home/aery/blockchain/advanced_contracts/assignment/contracts/Factory.sol": {
             "contracts": [
@@ -178,25 +178,7 @@
                                                         "declaration": 9,
                                                         "isOffset": false,
                                                         "isSlot": false,
-                                                        "src": "364:4:0",
-                                                        "valueSize": 1
-                                                    }
-                                                },
-                                                {
-                                                    "code": {
-                                                        "declaration": 9,
-                                                        "isOffset": false,
-                                                        "isSlot": false,
                                                         "src": "345:4:0",
-                                                        "valueSize": 1
-                                                    }
-                                                },
-                                                {
-                                                    "salt": {
-                                                        "declaration": 11,
-                                                        "isOffset": false,
-                                                        "isSlot": false,
-                                                        "src": "371:4:0",
                                                         "valueSize": 1
                                                     }
                                                 },
@@ -206,6 +188,24 @@
                                                         "isOffset": false,
                                                         "isSlot": false,
                                                         "src": "405:4:0",
+                                                        "valueSize": 1
+                                                    }
+                                                },
+                                                {
+                                                    "code": {
+                                                        "declaration": 9,
+                                                        "isOffset": false,
+                                                        "isSlot": false,
+                                                        "src": "364:4:0",
+                                                        "valueSize": 1
+                                                    }
+                                                },
+                                                {
+                                                    "salt": {
+                                                        "declaration": 11,
+                                                        "isOffset": false,
+                                                        "isSlot": false,
+                                                        "src": "371:4:0",
                                                         "valueSize": 1
                                                     }
                                                 }
@@ -702,25 +702,7 @@
                                                                 "declaration": 9,
                                                                 "isOffset": false,
                                                                 "isSlot": false,
-                                                                "src": "364:4:0",
-                                                                "valueSize": 1
-                                                            }
-                                                        },
-                                                        {
-                                                            "code": {
-                                                                "declaration": 9,
-                                                                "isOffset": false,
-                                                                "isSlot": false,
                                                                 "src": "345:4:0",
-                                                                "valueSize": 1
-                                                            }
-                                                        },
-                                                        {
-                                                            "salt": {
-                                                                "declaration": 11,
-                                                                "isOffset": false,
-                                                                "isSlot": false,
-                                                                "src": "371:4:0",
                                                                 "valueSize": 1
                                                             }
                                                         },
@@ -730,6 +712,24 @@
                                                                 "isOffset": false,
                                                                 "isSlot": false,
                                                                 "src": "405:4:0",
+                                                                "valueSize": 1
+                                                            }
+                                                        },
+                                                        {
+                                                            "code": {
+                                                                "declaration": 9,
+                                                                "isOffset": false,
+                                                                "isSlot": false,
+                                                                "src": "364:4:0",
+                                                                "valueSize": 1
+                                                            }
+                                                        },
+                                                        {
+                                                            "salt": {
+                                                                "declaration": 11,
+                                                                "isOffset": false,
+                                                                "isSlot": false,
+                                                                "src": "371:4:0",
                                                                 "valueSize": 1
                                                             }
                                                         }
