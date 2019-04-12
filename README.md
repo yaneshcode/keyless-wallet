@@ -17,6 +17,8 @@ Then run `npm i` to install the dependencies.
 
 ## Tests
 
+![truffle test](https://i.imgur.com/9NSI1eC.png)
+
 Before running tests you need to have ganache running
 
 Launch Ganache-cli on a new terminal window...
@@ -39,9 +41,13 @@ https://tool.smartdec.net/scan/86cc7f0813e542aa9f6757f665d48bfd
 
 ## Deployed Contracts
 On the Kovan testnet
+
 Version Control contract: 0x7dc03b8775baf5a0cab6fca4c2a8e0f5c5a37810
+
 Factory contract: 0xd43f8f862372651e102e5bc35171084604a69318
+
 Wallet contract: 0xf3f63ff1b6eb9403940908811551279054563d9c
+
 
 ## Licence
 
