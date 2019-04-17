@@ -9,3 +9,9 @@ Factory address(kovan):
 
 Version Control (kovan):
 0x4ea4a965aad12729836380fa8c4573216a253c75
+
+
+
+// Tetsing
+0x19A490f53009959787bE83BEd452DD4A59B3DA35
+Kovan wallet, eth was sent prior to contract creation.

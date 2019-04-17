@@ -79,6 +79,12 @@ async function isContract(address) {
   return code.slice(2).length > 0
 }
 
+async function getAccountBalance(address) {
+  const account = new web3.eth.Contract(accountAbi, address);
+  const balance = await account.methods.totalBalance().call();
+  return balance;
+}
+
 module.exports = {
   web3,
   deployFactory,
@@ -86,5 +92,6 @@ module.exports = {
   buildCreate2Address,
   numberToUint256,
   encodeParam,
-  isContract
+  isContract,
+  getAccountBalance
 }
