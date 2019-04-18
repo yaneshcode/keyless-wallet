@@ -1,4 +1,4 @@
-# CREATE2-wallets-with-upgrade
+# Keyless Wallet
 Using CREATE2 opcode to deploy counterfactual wallets.
 
 ## Use case
