@@ -17,8 +17,6 @@ Then run `npm i` to install the dependencies.
 
 ## Tests
 
-![truffle test](https://i.imgur.com/9NSI1eC.png)
-
 Before running tests you need to have ganache running
 
 Launch Ganache-cli on a new terminal window...
@@ -49,16 +47,12 @@ Factory contract: 0xd43f8f862372651e102e5bc35171084604a69318
 Wallet contract: 0xf3f63ff1b6eb9403940908811551279054563d9c
 
 
-## Licence
-
-MIT
-
-**Free Software, Hell Yeah!**
-
-# Resources
+## Resources
 https://eips.ethereum.org/EIPS/eip-1014
 
 https://github.com/miguelmota/solidity-create2-example
+
+https://github.com/stanislaw-glogowski/CREATE2
 
 https://medium.com/gitcoin/counterfactual-loan-repayment-828a59d9b730
 
@@ -67,4 +61,11 @@ https://hackernoon.com/create2-a-tale-of-two-optcodes-1e9b813418f8
 https://hackernoon.com/the-create2-opcode-and-dapp-onboarding-in-ethereum-e2178e6c20cb
 
 https://blog.goodaudience.com/one-weird-trick-to-fix-user-on-boarding-d54b7ff9d711
+
+
+## Licence
+
+MIT
+
+**Free Software, Hell Yeah!**
 
