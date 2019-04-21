@@ -5,7 +5,6 @@ const {
   deployFactory,
   deployAccount,
   buildCreate2Address,
-  numberToUint256,
   encodeParam,
   isContract,
   getAccountBalance
@@ -15,22 +14,23 @@ const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts
 
 async function main() {
   const factoryAddress = await deployFactory()
-  const salt = 1
+
+  const salt = "cafebabe"
 
   console.log("factory address: " + factoryAddress)
-  console.log("salt: " + numberToUint256(salt));
+  console.log("salt: " + ethers.utils.id(salt));
 
   const bytecode = `${accountBytecode}${encodeParam('address', web3.eth.currentProvider.addresses[0]).slice(2)}`
 
   const computedAddr = buildCreate2Address(
     factoryAddress,
-    numberToUint256(salt),
+    ethers.utils.id(salt),
     bytecode
   )
 
   const computedAddrKovan = buildCreate2Address(
-    "0xc126bd0440865b0ce4668269d485f7dd4750d4b9",
-    numberToUint256(6),
+    "0x11e06d5241c15291a2e6ad5a50b4fc5383a0dce6",
+    ethers.utils.id(salt),
     bytecode
   )
   console.log("kovan computed addr: " + computedAddrKovan)

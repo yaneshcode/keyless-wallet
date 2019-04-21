@@ -73,7 +73,7 @@ contract VersionControl {
 
     User storage user = users[usernameKey];
 
-    require(user.walletAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
+    require(user.walletAddress.balance > 0, "Wallet does not have enough funds to deploy.");
 
     address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], salt);
 
@@ -97,7 +97,7 @@ contract VersionControl {
 
     require(user.upgrading, "User is not in upgrade stage.");
 
-    require(user.upgradeAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
+    require(user.upgradeAddress.balance > 0, "Wallet does not have enough funds to deploy.");
 
     address walletAddress = factory.deploy(bytecodeMap[user.upgradeVersion], salt);
 
