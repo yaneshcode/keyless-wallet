@@ -20,6 +20,8 @@ contract VersionControl {
   FactoryInterface public factory;       // Factory contract address
   uint256 public currentVersion = 0;     // Keep track of the current version
   address public owner;
+  uint256 public deployThreshold = 521000;// Deploy fee is 500,000 wei. (~360 000 wei for storage + deploy wallet)
+                                          // Contract needs to have at least 521,000 wei to pay for transfer
 
   // struct to hold user data
   struct User {
@@ -73,7 +75,7 @@ contract VersionControl {
 
     User storage user = users[usernameKey];
 
-    require(user.walletAddress.balance > 0, "Wallet does not have enough funds to deploy.");
+    require(user.walletAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
     address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], salt);
 
@@ -97,7 +99,7 @@ contract VersionControl {
 
     require(user.upgrading, "User is not in upgrade stage.");
 
-    require(user.upgradeAddress.balance > 0, "Wallet does not have enough funds to deploy.");
+    require(user.upgradeAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
     address walletAddress = factory.deploy(bytecodeMap[user.upgradeVersion], salt);
 
@@ -171,5 +173,17 @@ contract VersionControl {
         user.upgradeVersion,
         user.upgrading
     );
+  }
+
+  // public function to view a user's wallet balance
+  function viewBalance(string memory _username) public view returns (uint256) {
+    bytes memory usernameBytes = bytes(_username);
+    bytes32 usernameKey = keccak256(usernameBytes);
+
+    require(users[usernameKey].exists, "User does not exist.");
+
+    User storage user = users[usernameKey];
+
+    return(user.walletAddress.balance);
   }
 }

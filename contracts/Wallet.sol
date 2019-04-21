@@ -7,13 +7,15 @@ contract Wallet {
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   address payable public owner;
+  uint256 public deployFee = 500000;      // Deploy fee is 500,000 wei. (~360 000 wei for storage + deploy wallet)
+  uint256 public deployThreshold = 521000;// Contract needs to have at least 521,000 wei to pay for transfer
 
   // Makes the user account the owner
   // Also refunds the deployer the gas used to
   // deploy this contract from its own funds
   constructor(address payable _owner) public {
-    require(address(this).balance > 0);
-    tx.origin.transfer(1);
+    require(address(this).balance > deployThreshold);
+    tx.origin.transfer(deployFee);
     owner = _owner;
   }
 
