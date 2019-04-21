@@ -47,7 +47,7 @@ async function main() {
   const to = computedAddr;
   const from = web3.eth.currentProvider.addresses[0];
 
-  const nonce = await web3.eth.getTransactionCount(from);
+  //const nonce = await web3.eth.getTransactionCount(from);
 
   //console.log("nonce: " + nonce);
 

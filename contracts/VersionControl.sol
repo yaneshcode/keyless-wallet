@@ -4,7 +4,7 @@ import "./SafeMath.sol";
 
 // Factory interface
 contract FactoryInterface {
-  function deploy(bytes memory code, uint256 salt) public returns(address);
+  function deploy(bytes memory code, bytes32 salt) public returns(address);
 }
 
 // Datastore contract
@@ -65,13 +65,15 @@ contract VersionControl {
   }
 
   // deploying a wallet contract. user will supply salt
-  function deployWallet(string memory _username, uint256 salt) public onlyOwner {
+  function deployWallet(string memory _username, bytes32 salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
     require(users[usernameKey].exists, "User does not exist.");
 
     User storage user = users[usernameKey];
+
+    require(user.walletAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
 
     address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], salt);
 
@@ -85,7 +87,7 @@ contract VersionControl {
   }
 
   // deploying an upgraded wallet contract. user will supply salt
-  function upgradeWallet(string memory _username, uint256 salt) public onlyOwner {
+  function upgradeWallet(string memory _username, bytes32 salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -94,6 +96,8 @@ contract VersionControl {
     User storage user = users[usernameKey];
 
     require(user.upgrading, "User is not in upgrade stage.");
+
+    require(user.upgradeAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
 
     address walletAddress = factory.deploy(bytecodeMap[user.upgradeVersion], salt);
 

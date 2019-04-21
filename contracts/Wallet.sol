@@ -8,10 +8,12 @@ contract Wallet {
 
   address payable public owner;
 
-  // Makes us(dapp owner) owner initially. We will
-  // do transactions on User's behalf until
-  // they take ownership of this contract
+  // Makes the user account the owner
+  // Also refunds the deployer the gas used to
+  // deploy this contract from its own funds
   constructor(address payable _owner) public {
+    require(address(this).balance > 0);
+    tx.origin.transfer(1);
     owner = _owner;
   }
 
@@ -37,7 +39,7 @@ contract Wallet {
     return true;
   }
 
-  // Withdraw all funds to owner
+  // Withdraw all funds to owner account
   function withdraw() public onlyOwner {
     uint256 balance = address(this).balance;
     require(balance > 0);
@@ -55,7 +57,6 @@ contract Wallet {
   //    - daily limits
   //    - multi sig
   //    - handle erc20 tokens
-  //    - I didn't implement these yet because testing takes time
 
   function() payable external {}
 }
