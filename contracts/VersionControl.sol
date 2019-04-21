@@ -20,8 +20,7 @@ contract VersionControl {
   FactoryInterface public factory;       // Factory contract address
   uint256 public currentVersion = 0;     // Keep track of the current version
   address public owner;
-  uint256 public deployThreshold = 521000;// Deploy fee is 500,000 wei. (~360 000 wei for storage + deploy wallet)
-                                          // Contract needs to have at least 521,000 wei to pay for transfer
+  uint256 public deployThreshold = 0;
 
   // struct to hold user data
   struct User {
