@@ -29,7 +29,7 @@ async function main() {
   )
 
   const computedAddrKovan = buildCreate2Address(
-    "0x11e06d5241c15291a2e6ad5a50b4fc5383a0dce6",
+    "0xd5863670b7ead2a4218261f473a81aa426363f1d",
     ethers.utils.id(salt),
     bytecode
   )
@@ -71,7 +71,7 @@ async function main() {
 
   // DEPLOYING WALLET
 
-  const result = await deployAccount(factoryAddress, salt, web3.eth.currentProvider.addresses[0])
+  const result = await deployAccount(factoryAddress, ethers.utils.id(salt), web3.eth.currentProvider.addresses[0])
 
   console.log("result tx: " + result.txHash)
   console.log("result addr: " + result.address)
