@@ -65,10 +65,11 @@ contract VersionControl {
     bytecodeMap[currentVersion] = _bytecode;
   }
 
-  // deploying a wallet contract. user will supply salt
-  function deployWallet(string memory _username, bytes32 salt) public onlyOwner {
+  // deploying a wallet contract. user will supply salt. owner is optional
+  function deployWallet(string memory _username, bytes32 _salt, address _owner) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
+    bytes memory walletOwner = abi.encodePacked((_owner == address(0x0)) ? owner : _owner);
 
     require(users[usernameKey].exists, "User does not exist.");
 
@@ -76,7 +77,10 @@ contract VersionControl {
 
     require(user.walletAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], salt);
+    // Add the owner of the wallet
+    bytes memory bytecodeResult = MergeBytes(bytecodeMap[user.bytecodeVersion], walletOwner);
+
+    address walletAddress = factory.deploy(bytecodeResult, _salt);
 
     // Check wallet address for security
     require(walletAddress == user.walletAddress, "Wallet address does not match.");
@@ -87,10 +91,11 @@ contract VersionControl {
 
   }
 
-  // deploying an upgraded wallet contract. user will supply salt
-  function upgradeWallet(string memory _username, bytes32 salt) public onlyOwner {
+  // deploying an upgraded wallet contract. user will supply _salt. owner is optional
+  function upgradeWallet(string memory _username, bytes32 _salt, address _owner) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
+    bytes memory walletOwner = abi.encodePacked((_owner == address(0x0)) ? owner : _owner);
 
     require(users[usernameKey].exists, "User does not exist.");
 
@@ -100,7 +105,10 @@ contract VersionControl {
 
     require(user.upgradeAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    address walletAddress = factory.deploy(bytecodeMap[user.upgradeVersion], salt);
+    // Add the owner of the wallet
+    bytes memory bytecodeResult = MergeBytes(bytecodeMap[user.bytecodeVersion], walletOwner);
+
+    address walletAddress = factory.deploy(bytecodeResult, _salt);
 
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
@@ -184,5 +192,28 @@ contract VersionControl {
     User storage user = users[usernameKey];
 
     return(user.walletAddress.balance);
+  }
+
+  // Concatenate two bytes arrays. https://ethereum.stackexchange.com/a/40456
+  function MergeBytes(bytes memory a, bytes memory b) public pure returns (bytes memory c) {
+    // Store the length of the first array
+    uint alen = a.length;
+    // Store the length of BOTH arrays
+    uint totallen = alen + b.length;
+    // Count the loops required for array a (sets of 32 bytes)
+    uint loopsa = (a.length + 31) / 32;
+    // Count the loops required for array b (sets of 32 bytes)
+    uint loopsb = (b.length + 31) / 32;
+    assembly {
+      let m := mload(0x40)
+      // Load the length of both arrays to the head of the new bytes array
+      mstore(m, totallen)
+      // Add the contents of a to the array
+      for {  let i := 0 } lt(i, loopsa) { i := add(1, i) } { mstore(add(m, mul(32, add(1, i))), mload(add(a, mul(32, add(1, i))))) }
+      // Add the contents of b to the array
+      for {  let i := 0 } lt(i, loopsb) { i := add(1, i) } { mstore(add(m, add(mul(32, add(1, i)), alen)), mload(add(b, mul(32, add(1, i))))) }
+      mstore(0x40, add(m, add(32, totallen)))
+      c := m
+    }
   }
 }
