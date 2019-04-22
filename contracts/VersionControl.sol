@@ -7,6 +7,11 @@ contract FactoryInterface {
   function deploy(bytes memory code, bytes32 salt) public returns(address);
 }
 
+// Wallet interface
+contract WalletInterface {
+  function setOwner(address payable _owner) public;
+}
+
 // Datastore contract
 contract VersionControl {
 
@@ -18,6 +23,7 @@ contract VersionControl {
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   FactoryInterface public factory;       // Factory contract address
+  WalletInterface public wallet;         // Wallet contract address
   uint256 public currentVersion = 0;     // Keep track of the current version
   address public owner;
   uint256 public deployThreshold = 0;
@@ -66,10 +72,9 @@ contract VersionControl {
   }
 
   // deploying a wallet contract. user will supply salt. owner is optional
-  function deployWallet(string memory _username, bytes32 _salt, address _owner) public onlyOwner {
+  function deployWallet(string memory _username, bytes32 _salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
-    bytes memory walletOwner = abi.encodePacked((_owner == address(0x0)) ? owner : _owner);
 
     require(users[usernameKey].exists, "User does not exist.");
 
@@ -77,10 +82,7 @@ contract VersionControl {
 
     require(user.walletAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    // Add the owner of the wallet
-    bytes memory bytecodeResult = MergeBytes(bytecodeMap[user.bytecodeVersion], walletOwner);
-
-    address walletAddress = factory.deploy(bytecodeResult, _salt);
+    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], _salt);
 
     // Check wallet address for security
     require(walletAddress == user.walletAddress, "Wallet address does not match.");
@@ -92,10 +94,9 @@ contract VersionControl {
   }
 
   // deploying an upgraded wallet contract. user will supply _salt. owner is optional
-  function upgradeWallet(string memory _username, bytes32 _salt, address _owner) public onlyOwner {
+  function upgradeWallet(string memory _username, bytes32 _salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
-    bytes memory walletOwner = abi.encodePacked((_owner == address(0x0)) ? owner : _owner);
 
     require(users[usernameKey].exists, "User does not exist.");
 
@@ -105,10 +106,7 @@ contract VersionControl {
 
     require(user.upgradeAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    // Add the owner of the wallet
-    bytes memory bytecodeResult = MergeBytes(bytecodeMap[user.bytecodeVersion], walletOwner);
-
-    address walletAddress = factory.deploy(bytecodeResult, _salt);
+    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], _salt);
 
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
@@ -192,6 +190,20 @@ contract VersionControl {
     User storage user = users[usernameKey];
 
     return(user.walletAddress.balance);
+  }
+
+  // function for user to set themselves as owner
+  function userOwnership(string memory _username, address payable _owner) public onlyOwner {
+    bytes memory usernameBytes = bytes(_username);
+    bytes32 usernameKey = keccak256(usernameBytes);
+
+    require(users[usernameKey].exists, "User does not exist.");
+
+    User storage user = users[usernameKey];
+
+    wallet = WalletInterface(user.walletAddress);
+
+    wallet.setOwner(_owner);
   }
 
   // Concatenate two bytes arrays. https://ethereum.stackexchange.com/a/40456

@@ -28,7 +28,7 @@ contract Wallet {
   // Upon user request, we can set them as _owner
   // and they have control of their wallet
   function setOwner(address payable _owner) public {
-    require(msg.sender == owner);
+    require(tx.origin == owner);
     emit OwnershipChanged(owner, _owner);
     owner = _owner;
   }
