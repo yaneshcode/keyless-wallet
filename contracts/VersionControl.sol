@@ -23,7 +23,6 @@ contract VersionControl {
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   FactoryInterface public factory;       // Factory contract address
-  WalletInterface public wallet;         // Wallet contract address
   uint256 public currentVersion = 0;     // Keep track of the current version
   address public owner;
   uint256 public deployThreshold = 0;
@@ -72,7 +71,7 @@ contract VersionControl {
   }
 
   // deploying a wallet contract. user will supply salt. owner is optional
-  function deployWallet(string memory _username, bytes32 _salt) public onlyOwner {
+  function deployWallet(string memory _username, bytes32 _salt, address payable _owner) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -87,6 +86,12 @@ contract VersionControl {
     // Check wallet address for security
     require(walletAddress == user.walletAddress, "Wallet address does not match.");
 
+    // Set owner if specified
+    if (_owner != address(0x0)){
+      WalletInterface wallet = WalletInterface(user.walletAddress);
+      wallet.setOwner(_owner);
+    }
+
     emit DeployedWallet(_username, walletAddress, user.bytecodeVersion);
 
     user.deployed = true;
@@ -94,7 +99,7 @@ contract VersionControl {
   }
 
   // deploying an upgraded wallet contract. user will supply _salt. owner is optional
-  function upgradeWallet(string memory _username, bytes32 _salt) public onlyOwner {
+  function upgradeWallet(string memory _username, bytes32 _salt, address payable _owner) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -110,6 +115,12 @@ contract VersionControl {
 
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
+
+    // Set owner if specified
+    if (_owner != address(0x0)){
+      WalletInterface wallet = WalletInterface(user.walletAddress);
+      wallet.setOwner(_owner);
+    }
 
     emit UpgradedWallet(_username, user.walletAddress, user.bytecodeVersion, user.upgradeAddress, user.upgradeVersion);
 
@@ -201,7 +212,7 @@ contract VersionControl {
 
     User storage user = users[usernameKey];
 
-    wallet = WalletInterface(user.walletAddress);
+    WalletInterface wallet = WalletInterface(user.walletAddress);
 
     wallet.setOwner(_owner);
   }
