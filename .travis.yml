@@ -1,7 +1,8 @@
 language: node_js
 
 node_js:
-- '4.9.1'
+- node
+- 'lts/*'
 - '6.16.0'
 
 script:
