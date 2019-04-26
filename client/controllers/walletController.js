@@ -1,3 +1,11 @@
+const {
+  buildCreate2Address,
+} = require('../utils/utils');
+
+//const {ADDRESS, ABI, PRIVATE_KEY} = require('./credentials');
+let ADDRESS_FACTORY = "";
+let BYTECODE_WALLET = "";
+
 var walletController = {};
 
 // Show index list of all players
@@ -10,7 +18,9 @@ walletController.getBalance = function (req, res) {
 };
 
 walletController.generateAddress = function (req, res) {
-  res.render('./index', { title: 'Keyless Wallet' });
+  let data = req.body;
+  let address = buildCreate2Address(ADDRESS_FACTORY, req.body.salt, BYTECODE_WALLET);
+  res.send(address);
 };
 
 walletController.deployWallet = function (req, res) {
