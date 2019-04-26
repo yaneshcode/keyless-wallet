@@ -28,3 +28,28 @@ a {
     background-repeat: repeat-y;
 
 }
+
+.footer {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  justify-content: space-between;
+}
+
+.footer-item {
+  background-color: grey;
+  height:40px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.footer-one,
+.footer-three {
+  flex: initial;
+  background-color: black;
+  width: 200px;
+}
