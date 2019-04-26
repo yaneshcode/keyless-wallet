@@ -3,9 +3,44 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
   <body>
+    <% include ../navBar %>
+    <div class="main-background">
+    <div class="container">
+
+
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <p>
+      <a href="/game/join"><h2>Join a game!</h2></a>
+      <a href="/game"><h3>Game Page</h3></a>
+      <a href="/player/index"><h3>View Players</h3></a>
+      <a href="/history/index"><h3>View Game History</h3></a>
+      <br/>
+      <a href="/about"><h4>About</h4></a>
+      <a href="/contact"><h4>Contact</h4></a>
+    </p>
+    <p>
+      <hr>
+      <h4>View and Create:</h4>
+      <p>Interfaces for manual database and game manipulations</p>
+          <a class="btn btn-primary" role="button" href="/board/piece/index"><h5>Pieces</h5></a>
+          &nbsp;
+          <a class="btn btn-primary" role="button" href="/board/space/index"><h5>Spaces</h5></a>
+          &nbsp;
+          <a class="btn btn-primary" role="button" href="/board/index"><h5>Boards</h5></a>
+          <br/><br/>
+          <a class="btn btn-success" role="button" href="/playerState/index"><h5>Player States</h5></a>
+          &nbsp;
+          <a class="btn btn-success" role="button" href="/gameState/index"><h5>Game States</h5></a>
+          <br/><br/>
+          <a class="btn btn-warning" role="button" href="/history/index"><h5>History</h5></a>
+          &nbsp;
+          <a class="btn btn-warning" role="button" href="/history/leaderboard"><h5>Leaderboard</h5></a>
+    </p>
+  </div>
+</div>
   </body>
 </html>
