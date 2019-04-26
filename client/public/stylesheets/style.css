@@ -38,7 +38,7 @@ a {
 }
 
 .footer-item {
-  background-color: grey;
+  background-color: #100c08;
   height:40px;
   flex: 1;
   display: flex;
@@ -51,5 +51,5 @@ a {
 .footer-three {
   flex: initial;
   background-color: black;
-  width: 200px;
+  width: 300px;
 }
