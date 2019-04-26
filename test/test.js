@@ -5,7 +5,6 @@ const {
   deployFactory,
   deployAccount,
   buildCreate2Address,
-  numberToUint256,
   encodeParam,
   isContract,
   getAccountBalance
@@ -15,22 +14,23 @@ const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts
 
 async function main() {
   const factoryAddress = await deployFactory()
-  const salt = 1
+
+  const salt = "cafebabe"
 
   console.log("factory address: " + factoryAddress)
-  console.log("salt: " + numberToUint256(salt));
+  console.log("salt: " + ethers.utils.id(salt));
 
   const bytecode = `${accountBytecode}${encodeParam('address', web3.eth.currentProvider.addresses[0]).slice(2)}`
 
   const computedAddr = buildCreate2Address(
     factoryAddress,
-    numberToUint256(salt),
+    ethers.utils.id(salt),
     bytecode
   )
 
   const computedAddrKovan = buildCreate2Address(
-    "0xc126bd0440865b0ce4668269d485f7dd4750d4b9",
-    numberToUint256(6),
+    "0xd5863670b7ead2a4218261f473a81aa426363f1d",
+    ethers.utils.id(salt),
     bytecode
   )
   console.log("kovan computed addr: " + computedAddrKovan)
@@ -71,7 +71,7 @@ async function main() {
 
   // DEPLOYING WALLET
 
-  const result = await deployAccount(factoryAddress, salt, web3.eth.currentProvider.addresses[0])
+  const result = await deployAccount(factoryAddress, ethers.utils.id(salt), web3.eth.currentProvider.addresses[0])
 
   console.log("result tx: " + result.txHash)
   console.log("result addr: " + result.address)

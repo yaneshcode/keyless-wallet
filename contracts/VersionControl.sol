@@ -7,6 +7,11 @@ contract FactoryInterface {
   function deploy(bytes memory code, bytes32 salt) public returns(address);
 }
 
+// Wallet interface
+contract WalletInterface {
+  function setOwner(address payable _owner) public;
+}
+
 // Datastore contract
 contract VersionControl {
 
@@ -18,8 +23,10 @@ contract VersionControl {
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   FactoryInterface public factory;       // Factory contract address
+  WalletInterface public wallet;         // Wallet contract address
   uint256 public currentVersion = 0;     // Keep track of the current version
   address public owner;
+  uint256 public deployThreshold = 0;
 
   // struct to hold user data
   struct User {
@@ -64,8 +71,8 @@ contract VersionControl {
     bytecodeMap[currentVersion] = _bytecode;
   }
 
-  // deploying a wallet contract. user will supply salt
-  function deployWallet(string memory _username, bytes32 salt) public onlyOwner {
+  // deploying a wallet contract. user will supply salt. owner is optional
+  function deployWallet(string memory _username, bytes32 _salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -73,9 +80,9 @@ contract VersionControl {
 
     User storage user = users[usernameKey];
 
-    require(user.walletAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
+    require(user.walletAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], salt);
+    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], _salt);
 
     // Check wallet address for security
     require(walletAddress == user.walletAddress, "Wallet address does not match.");
@@ -86,8 +93,8 @@ contract VersionControl {
 
   }
 
-  // deploying an upgraded wallet contract. user will supply salt
-  function upgradeWallet(string memory _username, bytes32 salt) public onlyOwner {
+  // deploying an upgraded wallet contract. user will supply _salt. owner is optional
+  function upgradeWallet(string memory _username, bytes32 _salt) public onlyOwner {
     bytes memory usernameBytes = bytes(_username);
     bytes32 usernameKey = keccak256(usernameBytes);
 
@@ -97,9 +104,9 @@ contract VersionControl {
 
     require(user.upgrading, "User is not in upgrade stage.");
 
-    require(user.upgradeAddress.balance() > 0), "Wallet does not have enough funds to deploy.";
+    require(user.upgradeAddress.balance > deployThreshold, "Wallet does not have enough funds to deploy.");
 
-    address walletAddress = factory.deploy(bytecodeMap[user.upgradeVersion], salt);
+    address walletAddress = factory.deploy(bytecodeMap[user.bytecodeVersion], _salt);
 
     // Check wallet address for security
     require(walletAddress == user.upgradeAddress, "Wallet address does not match.");
@@ -171,5 +178,54 @@ contract VersionControl {
         user.upgradeVersion,
         user.upgrading
     );
+  }
+
+  // public function to view a user's wallet balance
+  function viewBalance(string memory _username) public view returns (uint256) {
+    bytes memory usernameBytes = bytes(_username);
+    bytes32 usernameKey = keccak256(usernameBytes);
+
+    require(users[usernameKey].exists, "User does not exist.");
+
+    User storage user = users[usernameKey];
+
+    return(user.walletAddress.balance);
+  }
+
+  // function for user to set themselves as owner
+  function userOwnership(string memory _username, address payable _owner) public onlyOwner {
+    bytes memory usernameBytes = bytes(_username);
+    bytes32 usernameKey = keccak256(usernameBytes);
+
+    require(users[usernameKey].exists, "User does not exist.");
+
+    User storage user = users[usernameKey];
+
+    wallet = WalletInterface(user.walletAddress);
+
+    wallet.setOwner(_owner);
+  }
+
+  // Concatenate two bytes arrays. https://ethereum.stackexchange.com/a/40456
+  function MergeBytes(bytes memory a, bytes memory b) public pure returns (bytes memory c) {
+    // Store the length of the first array
+    uint alen = a.length;
+    // Store the length of BOTH arrays
+    uint totallen = alen + b.length;
+    // Count the loops required for array a (sets of 32 bytes)
+    uint loopsa = (a.length + 31) / 32;
+    // Count the loops required for array b (sets of 32 bytes)
+    uint loopsb = (b.length + 31) / 32;
+    assembly {
+      let m := mload(0x40)
+      // Load the length of both arrays to the head of the new bytes array
+      mstore(m, totallen)
+      // Add the contents of a to the array
+      for {  let i := 0 } lt(i, loopsa) { i := add(1, i) } { mstore(add(m, mul(32, add(1, i))), mload(add(a, mul(32, add(1, i))))) }
+      // Add the contents of b to the array
+      for {  let i := 0 } lt(i, loopsb) { i := add(1, i) } { mstore(add(m, add(mul(32, add(1, i)), alen)), mload(add(b, mul(32, add(1, i))))) }
+      mstore(0x40, add(m, add(32, totallen)))
+      c := m
+    }
   }
 }

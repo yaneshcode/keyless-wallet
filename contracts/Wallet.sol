@@ -7,13 +7,15 @@ contract Wallet {
   event OwnershipChanged(address indexed oldOwner, address indexed newOwner);
 
   address payable public owner;
+  uint256 public deployFee = 0;
+  uint256 public deployThreshold = 0;
 
   // Makes the user account the owner
   // Also refunds the deployer the gas used to
   // deploy this contract from its own funds
   constructor(address payable _owner) public {
-    require(address(this).balance > 0);
-    tx.origin.transfer(1);
+    require(address(this).balance > deployThreshold);
+    if(deployFee > 0) tx.origin.transfer(deployFee);
     owner = _owner;
   }
 
@@ -26,7 +28,7 @@ contract Wallet {
   // Upon user request, we can set them as _owner
   // and they have control of their wallet
   function setOwner(address payable _owner) public {
-    require(msg.sender == owner);
+    require(tx.origin == owner);
     emit OwnershipChanged(owner, _owner);
     owner = _owner;
   }

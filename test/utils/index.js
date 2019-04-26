@@ -32,6 +32,7 @@ async function deployAccount (factoryAddress, salt, recipient) {
   const nonce = await web3.eth.getTransactionCount(account)
   const bytecode = `${accountBytecode}${encodeParam('address', recipient).slice(2)}`
   console.log(bytecode);
+  console.log(salt)
   const result = await factory.methods.deploy(bytecode, salt).send({
     from: account,
     gas: 4500000,
@@ -41,11 +42,11 @@ async function deployAccount (factoryAddress, salt, recipient) {
 
   const computedAddr = buildCreate2Address(
     factoryAddress,
-    numberToUint256(salt),
+    salt,
     bytecode
   )
 
-  const addr = result.events.Deployed.returnValues.addr.toLowerCase()
+  const addr = result.events.DeployedWallet.returnValues.addr.toLowerCase()
   assert.equal(addr, computedAddr)
 
   return {
@@ -65,10 +66,10 @@ function buildCreate2Address(creatorAddress, saltHex, byteCode) {
   .join('')}`).slice(-40)}`.toLowerCase()
 }
 
-function numberToUint256(value) {
-  const hex = value.toString(16)
-  return `0x${'0'.repeat(64-hex.length)}${hex}`
-}
+// function valu) {
+//   const hex = value.toString(16)
+//   return `0x${'0'.repeat(64-hex.length)}${hex}`
+// }
 
 function encodeParam(dataType, data) {
   return web3.eth.abi.encodeParameter(dataType, data)
@@ -90,7 +91,7 @@ module.exports = {
   deployFactory,
   deployAccount,
   buildCreate2Address,
-  numberToUint256,
+
   encodeParam,
   isContract,
   getAccountBalance
