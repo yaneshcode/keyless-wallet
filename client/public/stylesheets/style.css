@@ -16,3 +16,13 @@ a {
 .navbar-class {
     width: 100%;
 }
+
+.main-background
+{
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.3)), url("../images/background/money.jpeg");
+    background-size:100% 100%;
+    background-repeat: repeat-y;
+
+}
