@@ -1,10 +1,10 @@
 const {
   buildCreate2Address,
+  deployAccount,
+  getAccountBalance,
+  getAddressBalance
 } = require('../utils/utils');
 
-//const {ADDRESS, ABI, PRIVATE_KEY} = require('./credentials');
-let ADDRESS_FACTORY = "";
-let BYTECODE_WALLET = "";
 
 var walletController = {};
 
@@ -14,17 +14,25 @@ walletController.index = function (req, res) {
 };
 
 walletController.getBalance = function (req, res) {
-  res.render('./index', { title: 'Keyless Wallet' });
+  let address = req.params.addr
+  console.log(address)
+  getAddressBalance(address).then((result) => {
+    res.send(result);
+  })
 };
 
 walletController.generateAddress = function (req, res) {
   let data = req.body;
-  let address = buildCreate2Address(ADDRESS_FACTORY, req.body.salt, BYTECODE_WALLET);
+  let address = buildCreate2Address(data.salt);
   res.send(address);
 };
 
 walletController.deployWallet = function (req, res) {
-  res.render('./index', { title: 'Keyless Wallet' });
+  let data = req.body;
+  deployAccount(data.salt).then((result) => {
+    res.send(result);
+  });
+  //res.send(result);
 };
 
 walletController.changeWalletOwner = function (req, res) {
