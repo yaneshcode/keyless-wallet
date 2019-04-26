@@ -3,9 +3,9 @@ var router = express.Router();
 var walletController = require('../controllers/walletController');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Keyless Wallet' });
+// });
 
 router.get('/', walletController.index);
 

@@ -1,8 +1,18 @@
-body {
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.container
+{
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
 }
 
 a {
   color: #00B7FF;
+}
+
+.navbar-class {
+    width: 100%;
 }
