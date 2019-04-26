@@ -29,7 +29,7 @@ async function main() {
   )
 
   const computedAddrKovan = buildCreate2Address(
-    "0xd5863670b7ead2a4218261f473a81aa426363f1d",
+    "0x5b4cf8ca7fd4082d9e8e4efa3761f280b40c027e",
     ethers.utils.id(salt),
     bytecode
   )
