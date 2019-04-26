@@ -28,7 +28,7 @@
     "test": "truffle test",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "server": "nodemon server.js",
-    "client": "cd client && npm start",
+    "client" : "cd client && nodemon ./bin/www",
     "lint" : "eslint --ext .js ./"
   },
   "proxy": "http://localhost:5000/",
