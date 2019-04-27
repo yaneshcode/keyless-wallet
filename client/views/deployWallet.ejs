@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Keyless Wallet</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  </head>
+  <body>
+    <% include ./navBar %>
+    <div class="main-background">
+    <div class="container">
+
+
+    <h1>Deploy your Wallet.</h1>
+
+      <hr>
+      <h4>Enter your username and password, along with your Eth public key.</h4>
+      <br><br>
+      <p>You need to have a positive balance in your wallet to deploy. You will have full control of your wallet if you provide your Eth public key.</p>
+      <div class="col-5">
+
+      <form class="form-group" action="/deployWallet" method="post">
+        <div>
+          Username: <br>
+          <input class="form-control" type="text" name="username" value="<%- wallet['username'] || "" %>" required>
+          <br>
+          Password: <br>
+          <input class="form-control" type="password" name="salt" value="<%- wallet['salt'] || "" %>" required>
+          <br>
+          Public Key (optional): <br>
+          <input class="form-control" type="text" name="address" value="<%- wallet['address'] || "" %>" required>
+          <br>
+        </div>
+      <div>
+      <br>
+      <input class="btn btn-primary btn-lg" role="button" type="submit" value="Deploy"/><br><br>
+
+      </div>
+      </form>
+      <%if (wallet['tx']) { %>
+
+      Wallet deploy successful: <a href="https://ropsten.etherscan.io/tx/" + "<%- wallet['tx'] %>">View Transaction on Etherscan</a>
+      <% } %>
+
+
+
+</div>
+  </div>
+  <% include ./footer %>
+
+    </body>
+
+</div>
+</html>
