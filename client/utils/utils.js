@@ -13,7 +13,7 @@ const { abi:factoryAbi, bytecode:factoryBytecode } = require('../build/contracts
 const { abi:accountAbi, bytecode:accountBytecode } = require('../build/contracts/Wallet.json')
 
 function buildCreate2Address(salt) {
-  const bytecode = `${accountBytecode}${encodeParam('address', web3.eth.currentProvider.addresses[0]).slice(2)}`
+  const bytecode = `${accountBytecode}${encodeParam('address', provider.addresses[0]).slice(2)}`
 
   return `0x${web3.utils.sha3(`0x${[
     'ff',

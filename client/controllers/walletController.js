@@ -34,11 +34,33 @@ walletController.getBalance = function (req, res) {
   })
 };
 
+walletController.showGenerateAddressPage = function (req, res) {
+  res.locals.wallet = {
+    username: "",
+    password: "",
+    address : "",
+  };
+  res.render('./createWallet');
+}
 walletController.generateAddress = function (req, res) {
   let data = req.body;
   let address = buildCreate2Address(data.salt);
-  res.send(address);
+  res.locals.wallet = {
+    address: address,
+    username: data.username,
+    password: "",
+
+  }
+  res.render('./createWallet');
 };
+
+walletController.showDeployWalletPage = function (req, res) {
+  res.locals.wallet = {
+    address : "",
+    balance: "",
+  };
+  res.render('./checkBalance');
+}
 
 walletController.deployWallet = function (req, res) {
   let data = req.body;
@@ -48,8 +70,8 @@ walletController.deployWallet = function (req, res) {
   //res.send(result);
 };
 
-walletController.changeWalletOwner = function (req, res) {
-  res.render('./index', { title: 'Keyless Wallet' });
+walletController.aboutPage = function (req, res) {
+  res.render('./about');
 };
 //
 // // Get a single player by slug
