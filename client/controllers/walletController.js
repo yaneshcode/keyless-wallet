@@ -57,7 +57,7 @@ walletController.generateAddress = function (req, res) {
 walletController.showDeployWalletPage = function (req, res) {
   res.locals.wallet = {
     address : "",
-    password: "",
+    salt: "",
     username: "",
     tx: "",
   };
@@ -69,12 +69,24 @@ walletController.deployWallet = function (req, res) {
   deployAccount(data.salt).then((result) => {
     res.locals.wallet = {
       address : data.address,
-      password: "",
-      username: data.username
+      salt: "",
+      username: data.username,
       tx: result.txHash,
+      success: true,
     };
+    res.render('./deployWallet');
+
+  }).catch((err) => {
+    res.locals.wallet = {
+      address : data.address,
+      salt: "",
+      username: data.username,
+      tx: err,
+      success: false,
+    };
+    res.render('./deployWallet');
+
   });
-  res.render('./deployWallet');
 };
 
 walletController.aboutPage = function (req, res) {

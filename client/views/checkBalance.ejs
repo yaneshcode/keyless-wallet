@@ -33,7 +33,7 @@
       <%if (wallet['address']) { %>
 
       Balance (ETH): <br>
-      <input class="form-control" disable="true" type="text" name="balance" value="<%- wallet['balance']/1000000000000000000 || "0" %>"><hr>
+      <input class="form-control" disable="true" type="text" name="balance" value="<%- (wallet['balance']/1000000000000000000).toFixed(18) || "0" %>"><hr>
       <% } %>
 
 

@@ -30,12 +30,12 @@ async function deployAccount (salt) {
   const account = provider.addresses[0]
   const nonce = await web3.eth.getTransactionCount(account)
   const bytecode = `${accountBytecode}${encodeParam('address', provider.addresses[0]).slice(2)}`
-  console.log(bytecode);
+  //console.log(bytecode);
   console.log(salt)
   const result = await factory.methods.deploy(bytecode, web3.utils.sha3(salt)).send({
     from: account,
     gas: 4500000,
-    gasPrice: 10000000000,
+    gasPrice: 20000000000,
     nonce
   })
 
@@ -45,12 +45,14 @@ async function deployAccount (salt) {
   //   bytecode
   // )
 
-  const addr = result.events.DeployedWallet.returnValues.addr.toLowerCase()
+  console.log(result.transactionHash);
+  //const addr = result.events.DeployedWallet.returnValues.addr.toLowerCase()
   //assert.equal(addr, computedAddr)
+  //console.log(addr);
 
   return {
     txHash: result.transactionHash,
-    address: addr,
+    //address: addr,
     receipt: result
   }
 }

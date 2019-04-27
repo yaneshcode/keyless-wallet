@@ -39,7 +39,14 @@
       </form>
       <%if (wallet['tx']) { %>
 
-      Wallet deploy successful: <a href="https://ropsten.etherscan.io/tx/" + "<%- wallet['tx'] %>">View Transaction on Etherscan</a>
+        <%if (wallet['success']) { %>
+
+        Wallet deploy successful: <a href="https://ropsten.etherscan.io/tx/" + "<%- wallet['tx'] %>">View Transaction on Etherscan</a>
+        <% } %>
+        <%if (!wallet['success']) { %>
+
+        Wallet deploy failed: Check if you have a positive balance and that your username and password match.
+        <% } %>
       <% } %>
 
 
