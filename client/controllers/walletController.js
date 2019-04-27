@@ -13,11 +13,24 @@ walletController.index = function (req, res) {
   res.render('./index', { title: 'Keyless Wallet' });
 };
 
+// Show check balance page
+walletController.showBalancePage = function (req, res) {
+  res.locals.wallet = {
+    address : "",
+    balance: "",
+  };
+  res.render('./checkBalance');
+}
+
 walletController.getBalance = function (req, res) {
-  let address = req.params.addr
+  let address = req.body.address;
   console.log(address)
   getAddressBalance(address).then((result) => {
-    res.send(result);
+    res.locals.wallet = {
+      address: address,
+      balance: result
+    }
+    res.render('./checkBalance');
   })
 };
 
