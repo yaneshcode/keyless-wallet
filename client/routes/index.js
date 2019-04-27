@@ -2,20 +2,21 @@ var express = require('express');
 var router = express.Router();
 var walletController = require('../controllers/walletController');
 
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Keyless Wallet' });
-// });
-
 router.get('/', walletController.index);
 
-router.get('/getBalance/:addr', walletController.getBalance);
+router.get('/getBalance', walletController.showBalancePage);
 
-router.post('/generateAddress', walletController.generateAddress);
+router.post('/getBalance', walletController.getBalance);
+
+router.get('/createWallet', walletController.showGenerateAddressPage);
+
+router.post('/createWallet', walletController.generateAddress);
+
+router.get('/deployWallet', walletController.showDeployWalletPage);
 
 router.post('/deployWallet', walletController.deployWallet);
 
-router.post('/changeWalletOwner', walletController.changeWalletOwner);
+router.get('/about', walletController.aboutPage);
 
 
 module.exports = router;

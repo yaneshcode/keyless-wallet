@@ -13,143 +13,84 @@ walletController.index = function (req, res) {
   res.render('./index', { title: 'Keyless Wallet' });
 };
 
+// Show check balance page
+walletController.showBalancePage = function (req, res) {
+  res.locals.wallet = {
+    address : "",
+    balance: "",
+  };
+  res.render('./checkBalance');
+}
+
 walletController.getBalance = function (req, res) {
-  let address = req.params.addr
+  let address = req.body.address;
   console.log(address)
   getAddressBalance(address).then((result) => {
-    res.send(result);
+    res.locals.wallet = {
+      address: address,
+      balance: result
+    }
+    res.render('./checkBalance');
   })
 };
 
+walletController.showGenerateAddressPage = function (req, res) {
+  res.locals.wallet = {
+    username: "",
+    password: "",
+    address : "",
+  };
+  res.render('./createWallet');
+}
 walletController.generateAddress = function (req, res) {
   let data = req.body;
   let address = buildCreate2Address(data.salt);
-  res.send(address);
+  res.locals.wallet = {
+    address: address,
+    username: data.username,
+    password: "",
+
+  }
+  res.render('./createWallet');
 };
+
+walletController.showDeployWalletPage = function (req, res) {
+  res.locals.wallet = {
+    address : "",
+    salt: "",
+    username: "",
+    tx: "",
+  };
+  res.render('./deployWallet');
+}
 
 walletController.deployWallet = function (req, res) {
   let data = req.body;
   deployAccount(data.salt).then((result) => {
-    res.send(result);
+    res.locals.wallet = {
+      address : data.address,
+      salt: "",
+      username: data.username,
+      tx: result.txHash,
+      success: true,
+    };
+    res.render('./deployWallet');
+
+  }).catch((err) => {
+    res.locals.wallet = {
+      address : data.address,
+      salt: "",
+      username: data.username,
+      tx: err,
+      success: false,
+    };
+    res.render('./deployWallet');
+
   });
-  //res.send(result);
 };
 
-walletController.changeWalletOwner = function (req, res) {
-  res.render('./index', { title: 'Keyless Wallet' });
+walletController.aboutPage = function (req, res) {
+  res.render('./about');
 };
-//
-// // Get a single player by slug
-// playerController.showSlug = function (req, res) {
-//   Player.findOne({
-//     slug: req.params.slug
-//   }).exec((err, player) => {
-//     if (err) {
-//       console.log("Error: " + err);
-//     }
-//     else {
-//       res.locals.player = player;
-//       //res.render('players/show')
-//       res.send(player);
-//     }
-//   })
-// };
-//
-// // Get a single player by id
-// playerController.show = function (req, res) {
-//   Player.findOne({
-//     _id: req.params.id
-//   }).exec((err, player) => {
-//     if (err) {
-//       console.log("Error: " + err);
-//     }
-//     else {
-//       res.locals.player = player;
-//       res.render('./player/show');
-//     }
-//   })
-// };
-//
-// // Show player info to update
-// playerController.showUpdate = function (req, res) {
-//   Player.findOne({
-//     _id: req.params.id
-//   }).exec((err, player) => {
-//     if (err) {
-//       console.log("Error: " + err);
-//     }
-//     else {
-//       res.locals.player = player;
-//       res.render('./player/update');
-//     }
-//   })
-// };
-//
-// // Create a new player
-// // initialize empty and redirect
-// playerController.new = function (req, res) {
-//   res.locals.title = "New Player";
-//   res.locals.player = {
-//     username: "",
-//     publicKey: "",
-//     balance: ""
-//   };
-//   res.render('./player/new');
-// };
-//
-// // Save a new player
-// playerController.save = function (req, res) {
-//   let newPlayer = new Player(req.body);
-//
-//   newPlayer.save((err) => {
-//     if (err) {
-//       console.log("Error: " + err);
-//     }
-//     else {
-//       console.log("Successfully saved new player.");
-//       res.redirect("/player/index");
-//       //res.send("Succesffully saved new player.");
-//     }
-//   });
-// };
-//
-// // Update an existing player
-// playerController.update = function (req, res) {
-//   Player.findByIdAndUpdate(
-//     req.params.id,
-//     {
-//       $set: req.body
-//     },
-//     {
-//       new: true   // returns the modified data instead of original
-//     },
-//     (err, player) => {
-//       if (err) {
-//         console.log("Error: " + err);
-//       }
-//       else {
-//         console.log("Updated player: " + player._id);
-//         res.redirect("/player/index");
-//       }
-//     }
-//   );
-// };
-//
-// // Delete an existing player
-// playerController.delete = function (req, res) {
-//   Player.findByIdAndDelete(
-//     req.params.id,
-//     (err, player) => {
-//       if (err) {
-//         console.log("Error: " + err);
-//       }
-//       else {
-//         console.log("Player deleted: \n", player);
-//         res.redirect("/player/index");
-//         //res.send("Deleted player: \n", player);
-//       }
-//     }
-//   );
-// }
 
 module.exports = walletController;
