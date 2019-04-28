@@ -1,1 +1,1 @@
-web: npm run postinstall && npm run client
+web: npm run client
